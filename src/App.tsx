@@ -409,28 +409,62 @@ function App() {
       };
 
   return (
-    <div style={{ minHeight: "100vh", background: colors.bg, color: colors.text, fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" }}>
+    <div className="app-shell" style={{ minHeight: "100vh", background: colors.bg, color: colors.text, fontFamily: "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" }}>
       <style>{`
-        * { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body { margin: 0; }
         button, input, textarea { font: inherit; }
         button { cursor: pointer; }
-        ::-webkit-scrollbar { width: 9px; height: 9px; }
-        ::-webkit-scrollbar-thumb { background: ${colors.border}; border-radius: 20px; }
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: ${colors.bg}; }
+        ::-webkit-scrollbar-thumb { background: ${colors.border}; border-radius: 20px; border: 3px solid ${colors.bg}; }
         .hoverable:hover { border-color: ${colors.accent} !important; transform: translateY(-1px); }
         .topic:hover { background: ${dark ? "#141D2D" : "#F8FAFC"} !important; }
+        .site-header { backdrop-filter: blur(18px); background: ${dark ? "rgba(17,24,39,.88)" : "rgba(255,255,255,.88)"} !important; }
+        .workspace { max-width: 1680px !important; width: 100%; }
+        .progress-card { min-height: 148px; }
+        .track-tabs { scrollbar-width: none; }
+        .track-tabs::-webkit-scrollbar { display: none; }
+        .phase-card { box-shadow: 0 12px 30px ${dark ? "rgba(0,0,0,.12)" : "rgba(15,23,42,.05)"}; }
+        .topic { box-shadow: 0 2px 7px ${dark ? "rgba(0,0,0,.08)" : "rgba(15,23,42,.025)"}; }
+        @media (min-width: 851px) { .roadmap { padding-right: 26px; } }
         @media (max-width: 850px) {
           .header-inner { flex-direction: column !important; align-items: stretch !important; }
           .controls { width: 100% !important; }
+          .search-wrap, .search-wrap input { width: 100% !important; }
+          .controls > button { flex: 1; min-height: 42px; }
+          .workspace { padding: 18px 14px 44px !important; }
           .layout { grid-template-columns: 1fr !important; }
           .sidebar { position: static !important; }
+          .sidebar { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px !important; }
+          .sidebar > div:first-child { grid-column: 1 / -1; }
           .roadmap { padding: 0 !important; }
           .progress-grid { grid-template-columns: 1fr !important; }
+          .progress-card { min-height: auto; }
+          .topic-row { align-items: flex-start !important; }
+          .topic-title { line-height: 1.35; }
+          .roadmap-timeline { padding-left: 0 !important; }
+          .roadmap-timeline > div:first-child, .roadmap-section > div:first-child { display: none; }
+          .roadmap-section { margin-bottom: 22px !important; }
+          .phase-card { padding: 14px !important; }
+          .section-heading { font-size: 18px !important; }
+        }
+        @media (max-width: 480px) {
+          .header-inner { padding: 16px 14px !important; }
+          .header-inner h1 { font-size: 21px !important; }
+          .header-inner > div:first-child > div:last-child { font-size: 12px !important; }
+          .sidebar { grid-template-columns: 1fr; }
+          .sidebar > div:first-child { grid-column: auto; }
+          .phase-card > div { align-items: flex-start !important; }
+          .phase-card > div > div:last-child { min-width: 42px !important; }
+          .topic-row { padding: 12px 10px !important; gap: 9px !important; }
+          .topic-row > button:first-child { margin-top: 1px; }
+          .topic-row > span { display: none; }
+          .topic-detail { padding: 12px 12px 14px 39px !important; }
         }
       `}</style>
 
-      <header style={{ borderBottom: `1px solid ${colors.border}`, background: colors.surface, position: "sticky", top: 0, zIndex: 10 }}>
+      <header className="site-header" style={{ borderBottom: `1px solid ${colors.border}`, background: colors.surface, position: "sticky", top: 0, zIndex: 10 }}>
         <div className="header-inner" style={{ maxWidth: 1500, margin: "auto", padding: "18px 24px", display: "flex", gap: 18, alignItems: "center", justifyContent: "space-between" }}>
           <div>
             <div style={{ fontSize: 12, color: colors.accent, fontWeight: 800, letterSpacing: ".12em", textTransform: "uppercase" }}>2026 → 2028</div>
@@ -439,7 +473,7 @@ function App() {
           </div>
 
           <div className="controls" style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", justifyContent: "flex-end" }}>
-            <div style={{ position: "relative" }}>
+            <div className="search-wrap" style={{ position: "relative" }}>
               <span style={{ position: "absolute", left: 11, top: 9, color: colors.muted }}>⌕</span>
               <input
                 aria-label="Search roadmap"
@@ -455,9 +489,9 @@ function App() {
         </div>
       </header>
 
-      <main style={{ maxWidth: 1500, margin: "auto", padding: "22px 24px 60px" }}>
+      <main className="workspace" style={{ maxWidth: 1500, margin: "auto", padding: "28px 30px 70px" }}>
         <div className="progress-grid" style={{ display: "grid", gridTemplateColumns: "1.4fr .8fr .8fr", gap: 12, marginBottom: 20 }}>
-          <div style={card(colors)}>
+          <div className="progress-card" style={card(colors)}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "end", gap: 20 }}>
               <div>
                 <div style={{ color: colors.muted, fontSize: 12, textTransform: "uppercase", letterSpacing: ".08em" }}>{track.title}</div>
@@ -471,20 +505,20 @@ function App() {
             </div>
           </div>
 
-          <div style={card(colors)}>
+          <div className="progress-card" style={card(colors)}>
             <div style={{ color: colors.muted, fontSize: 12 }}>NEXT UP</div>
             <div style={{ marginTop: 7, fontWeight: 700, lineHeight: 1.35 }}>{firstIncomplete?.title || "Everything completed 🎉"}</div>
             {firstIncomplete && <button onClick={continueLearning} style={{ ...btn(colors), marginTop: 12, width: "100%" }}>Continue Learning →</button>}
           </div>
 
-          <div style={card(colors)}>
+          <div className="progress-card" style={card(colors)}>
             <div style={{ color: colors.muted, fontSize: 12 }}>MILESTONE</div>
             <div style={{ marginTop: 7, fontWeight: 700 }}>{milestone(percent)}</div>
             <div style={{ color: colors.muted, fontSize: 12, marginTop: 6 }}>Complete topics in sequence; nothing is locked.</div>
           </div>
         </div>
 
-        <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 10, marginBottom: 12 }}>
+        <div className="track-tabs" style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 10, marginBottom: 18 }}>
           {TRACKS.map((t) => (
             <button key={t.id} onClick={() => { setActiveTrack(t.id); setSearch(""); setFilter("all"); setOpenTopic(null); }} style={{ ...tab(colors), background: activeTrack === t.id ? colors.accent : colors.surface, color: activeTrack === t.id ? "#07101F" : colors.text }}>
               {t.title}
@@ -520,19 +554,19 @@ function App() {
               ))}
             </div>
 
-            <div style={{ position: "relative", paddingLeft: 34 }}>
+            <div className="roadmap-timeline" style={{ position: "relative", paddingLeft: 34 }}>
               <div style={{ position: "absolute", left: 12, top: 10, bottom: 10, width: 2, background: colors.border }} />
 
               {visiblePhases.map((p) => {
                 const done = p.topics.filter((t) => state[t.id]?.completed).length;
                 return (
-                  <section id={p.id} key={p.id} style={{ position: "relative", marginBottom: 30 }}>
+                  <section className="roadmap-section" id={p.id} key={p.id} style={{ position: "relative", marginBottom: 30 }}>
                     <div style={{ position: "absolute", left: -28, top: 18, width: 14, height: 14, borderRadius: "50%", background: done === p.topics.length ? colors.success : colors.accent, boxShadow: `0 0 0 5px ${colors.bg}` }} />
-                    <div style={{ ...card(colors), marginBottom: 10 }}>
+                    <div className="phase-card" style={{ ...card(colors), marginBottom: 10 }}>
                       <div style={{ display: "flex", justifyContent: "space-between", gap: 16, alignItems: "start" }}>
                         <div>
                           <div style={{ color: colors.accent, fontSize: 11, fontWeight: 800, letterSpacing: ".1em" }}>PHASE {String(p.number).padStart(2, "0")}</div>
-                          <h2 style={{ margin: "4px 0 5px", fontSize: 20 }}>{p.title}</h2>
+                          <h2 className="section-heading" style={{ margin: "4px 0 5px", fontSize: 20 }}>{p.title}</h2>
                           <div style={{ color: colors.muted, fontSize: 13, lineHeight: 1.5 }}>{p.objective}</div>
                         </div>
                         <div style={{ minWidth: 58, textAlign: "right", color: done === p.topics.length ? colors.success : colors.muted, fontWeight: 800, fontSize: 13 }}>
@@ -547,13 +581,13 @@ function App() {
                         const open = openTopic === t.id;
                         return (
                           <article id={t.id} key={t.id} className="topic" style={{ border: `1px solid ${done ? colors.success + "66" : colors.border}`, background: colors.surface, borderRadius: 10, transition: "all .15s ease" }}>
-                            <div style={{ display: "flex", alignItems: "center", gap: 11, padding: "11px 13px" }}>
+                            <div className="topic-row" style={{ display: "flex", alignItems: "center", gap: 11, padding: "11px 13px" }}>
                               <button
                                 aria-label={done ? `Mark ${t.title} incomplete` : `Mark ${t.title} complete`}
                                 onClick={() => toggle(t.id)}
                                 style={{ width: 20, height: 20, flex: "0 0 20px", borderRadius: 5, border: `1.5px solid ${done ? colors.success : colors.muted}`, background: done ? colors.success : "transparent", color: "#07101F", fontWeight: 900 }}
                               >{done ? "✓" : ""}</button>
-                              <button onClick={() => setOpenTopic(open ? null : t.id)} style={{ flex: 1, border: 0, background: "transparent", color: done ? colors.muted : colors.text, textAlign: "left", textDecoration: done ? "line-through" : "none", fontWeight: 650, padding: 0, cursor: "pointer" }}>
+                              <button className="topic-title" onClick={() => setOpenTopic(open ? null : t.id)} style={{ flex: 1, border: 0, background: "transparent", color: done ? colors.muted : colors.text, textAlign: "left", textDecoration: done ? "line-through" : "none", fontWeight: 650, padding: 0, cursor: "pointer" }}>
                                 {t.title}
                               </button>
                               <button onClick={() => setNotesTopic(notesTopic === t.id ? null : t.id)} title="Notes" style={{ border: 0, background: "transparent", color: state[t.id]?.notes ? colors.accent : colors.muted, fontSize: 16 }}>✎</button>
@@ -561,7 +595,7 @@ function App() {
                             </div>
 
                             {open && (
-                              <div style={{ borderTop: `1px solid ${colors.border}`, padding: "12px 14px 14px 44px" }}>
+                              <div className="topic-detail" style={{ borderTop: `1px solid ${colors.border}`, padding: "12px 14px 14px 44px" }}>
                                 <div style={{ color: colors.muted, fontSize: 13, lineHeight: 1.55 }}>{t.description}</div>
                                 <div style={{ display: "flex", gap: 8, marginTop: 12, flexWrap: "wrap" }}>
                                   <button onClick={() => toggle(t.id)} style={{ ...btn(colors), background: done ? "transparent" : colors.success, color: done ? colors.text : "#06120A", borderColor: done ? colors.border : colors.success }}>
